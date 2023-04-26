@@ -11,8 +11,8 @@ from concurrent import futures
 
 
 BG_GRAY = "#ABB2B9"
-BG_COLOR = "#17202A"
-TEXT_COLOR = "#EAECEE"
+BG_COLOR = "#ffffff"
+TEXT_COLOR = "#0b0b0b"
 
 FONT = "Arial"
 FONT_BOLD = "Rockwell"
@@ -95,12 +95,12 @@ class ChatApplication:
         bottom_label.place(relwidth=1, rely=0.825)
 
         # ">你"
-        self.pre_text = Label(bottom_label, font=FONT, bg="#2C3E50", text=">You")
-        self.pre_text.config(fg='white', anchor="center", cursor="arrow")
+        self.pre_text = Label(bottom_label, font=FONT, bg=BG_COLOR, text=">You")
+        self.pre_text.config(fg='black', anchor="center", cursor="arrow")
         self.pre_text.place(relwidth=0.10, relheight=0.06, rely=0.008)
 
         # message entry box
-        self.msg_entry = Entry(bottom_label, bg="#2C3E50",
+        self.msg_entry = Entry(bottom_label, bg=BG_COLOR,
                                fg=TEXT_COLOR, font=FONT)
         self.msg_entry.place(relwidth=0.74, relheight=0.06,
                              rely=0.008, relx=0.111)
@@ -109,7 +109,7 @@ class ChatApplication:
 
         # send button
         send_button = Button(bottom_label, text="Send", font=FONT_BOLD, width=20, bg=BG_GRAY,
-                             command=lambda: self._on_enter_pressed)
+                             command=self._on_enter_pressed)
         send_button.place(relx=0.87, rely=0.008, relheight=0.06, relwidth=0.12)
         self.before_start()
 
@@ -117,7 +117,7 @@ class ChatApplication:
         """
         After enter <Return> in text entry.
         """
-        self._on_enter_pressed(event)
+        self._on_enter_pressed()
 
     def show_api_window(self):
         # 创建一个窗口
@@ -230,7 +230,7 @@ class ChatApplication:
         self.text_widget.insert(END, msg1)
         self.text_widget.configure(state=DISABLED)
 
-    def _on_enter_pressed(self, event):
+    def _on_enter_pressed(self):
         """
         After enter <Send>.
         """
