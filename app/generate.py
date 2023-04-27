@@ -177,6 +177,7 @@ def main(
             return
         elif predicted == 3: 
             yield [summarize(input), '']
+            return
         elif predicted == 4:
             instruction = instruction + "\n Continue the story. Don't be too long, just about 3 paragraph and less than 128 words."
         else:
