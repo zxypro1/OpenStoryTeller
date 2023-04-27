@@ -84,7 +84,6 @@ def main(
     assert (
         base_model
     ), "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
-    history = gr.State('')
 
     prompter = Prompter(prompt_template)
     tokenizer = LlamaTokenizer.from_pretrained(base_model)
@@ -149,6 +148,7 @@ def main(
         msg = vectorizer.transform(msg)
         msg = torch.from_numpy(msg.toarray()).float()
 
+        history = ''
         history = history + instruction + '\n'
         history = history + input + '\n'
 
@@ -158,7 +158,7 @@ def main(
             _, predicted = torch.max(class_result.data, 1)
             predicted = predicted.numpy()[0]
 
-        if predicted == 1 and isFirstReq:  
+        if predicted == 1:  
             instruction = "Now you come to act as an adventure word game, description of the time to pay attention to the pace, not too fast, carefully describe the mood of each character and the surrounding environment. \n" + instruction
             isFirstReq = False
         elif predicted == 2:
