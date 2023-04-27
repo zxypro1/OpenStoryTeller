@@ -17,7 +17,7 @@ TEXT_COLOR = "#0b0b0b"
 FONT = "Arial"
 FONT_BOLD = "Rockwell"
 
-story_background = "The continent of Syndicate is divided into the provinces of Torrey, Nile and Mura, in which live three races of dwarves, elves and humans as well as countless monsters. You are a human male wizard from Torrey, 21 years old. With a flaming staff in your left hand, a spellbook in your right, and a backpack with rations to last a week, you enter the Lykens Rainforest for an adventure."
+story_background = ""
 
 
 def thread_it(func, *args):
@@ -111,7 +111,8 @@ class ChatApplication:
         send_button = Button(bottom_label, text="Send", font=FONT_BOLD, width=20, bg=BG_GRAY,
                              command=self._on_enter_pressed)
         send_button.place(relx=0.87, rely=0.008, relheight=0.06, relwidth=0.12)
-        self.before_start()
+        # self.before_start()
+        self.register_storyteller(use_default=True)
 
     def _on_return(self, event):
         """
@@ -186,8 +187,8 @@ class ChatApplication:
         Init background and register a storyteller
         :param use_default: Whether user use default session token in config.py. If not, use access token.
         """
-        self.show_background_window()
-        self.story_teller = StoryTeller(self.api_key, self.background)
+        # self.show_background_window()
+        self.story_teller = StoryTeller()
 
     def start_toplevel_window(self, msg):
         """
