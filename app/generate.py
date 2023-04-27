@@ -149,8 +149,8 @@ def main(
         msg = vectorizer.transform(msg)
         msg = torch.from_numpy(msg.toarray()).float()
 
-        history.append(instruction + '\n')
-        history.append(input + '\n')
+        history = history + instruction + '\n'
+        history = history + input + '\n'
 
         # Make predictions
         with torch.no_grad():
@@ -169,7 +169,7 @@ def main(
             yield prompter.get_response("### Response: Do summary")
             return
         elif predicted == 4:
-            instruction = ''.join(history) + instruction + "\n Continue the story. Don't be too long, just about 3 paragraph and less than 300 words."
+            instruction = history + instruction + "\n Continue the story. Don't be too long, just about 3 paragraph and less than 300 words."
         else:
             pass
 
@@ -217,7 +217,7 @@ def main(
                 for output in generator:
                     # new_tokens = len(output) - len(input_ids[0])
                     decoded_output = tokenizer.decode(output)
-                    history.append(prompter.get_response(decoded_output) + '\n')
+                    history = history + (prompter.get_response(decoded_output) + '\n')
 
                     if output[-1] in [tokenizer.eos_token_id]:
                         break
@@ -236,7 +236,7 @@ def main(
             )
         s = generation_output.sequences[0]
         output = tokenizer.decode(s)
-        history.append(prompter.get_response(decoded_output) + '\n')
+        history = history + (prompter.get_response(decoded_output) + '\n')
         yield prompter.get_response(output)
 
     gr.Interface(
@@ -269,6 +269,10 @@ def main(
             gr.components.Textbox(
                 lines=5,
                 label="Output",
+            ),
+            gr.components.Textbox(
+                lines=5,
+                label="History",
             )
         ],
         title="Open Story Teller ✒️",
