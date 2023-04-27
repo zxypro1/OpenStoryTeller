@@ -15,6 +15,7 @@ import torch.optim as optim
 from sklearn.feature_extraction.text import CountVectorizer
 import json
 import numpy as np
+from transformers import T5ForConditionalGeneration, T5Tokenizer
 
 if torch.cuda.is_available():
     device = "cuda"
@@ -57,6 +58,15 @@ input_size = max_word_count # size of input layer
 hidden_size = 128 # size of hidden layer
 output_size = 5 # size of output layer
 learning_rate = 0.01 # learning rate for optimizer
+model_name = 't5-small'
+tokenizer = T5Tokenizer.from_pretrained(model_name)
+sum_model = T5ForConditionalGeneration.from_pretrained(model_name)
+
+def summarize(text, max_length=150):
+    inputs = tokenizer.encode("summarize: " + text, return_tensors="pt", max_length=512, truncation=True)
+    outputs = sum_model.generate(inputs, max_length=max_length, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
+    summary = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return summary
 
 # Initialize CountVectorizer
 vectorizer = CountVectorizer(max_features=max_word_count)
@@ -166,7 +176,7 @@ def main(
             history = []
             return
         elif predicted == 3: 
-            pass
+            yield [summarize(input), '']
         elif predicted == 4:
             instruction = instruction + "\n Continue the story. Don't be too long, just about 3 paragraph and less than 128 words."
         else:
