@@ -71,7 +71,6 @@ X = vectorizer.fit_transform(X)
 class_model = DNN(input_size, hidden_size, output_size)
 class_model.load_state_dict(torch.load('../models/intent_model_DNN.ckpt'))
 isFirstReq = True
-history = []
 
 def main(
     load_8bit: bool = False,
@@ -85,6 +84,7 @@ def main(
     assert (
         base_model
     ), "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
+    history = gr.State('')
 
     prompter = Prompter(prompt_template)
     tokenizer = LlamaTokenizer.from_pretrained(base_model)
@@ -222,7 +222,7 @@ def main(
                     if output[-1] in [tokenizer.eos_token_id]:
                         break
 
-                    yield prompter.get_response(decoded_output)
+                    yield [prompter.get_response(decoded_output), history]
             return  # early return for stream_output
 
         # Without streaming
@@ -237,7 +237,7 @@ def main(
         s = generation_output.sequences[0]
         output = tokenizer.decode(s)
         history = history + (prompter.get_response(decoded_output) + '\n')
-        yield prompter.get_response(output)
+        yield [prompter.get_response(output), history]
 
     gr.Interface(
         fn=evaluate,
@@ -281,25 +281,4 @@ def main(
 
 
 if __name__ == "__main__":
-    # Define hyperparameters
-    max_word_count = 200 # maximum possible word count of user input
-    input_size = max_word_count # size of input layer
-    hidden_size = 128 # size of hidden layer
-    output_size = 5 # size of output layer
-    learning_rate = 0.01 # learning rate for optimizer
-
-    # Initialize CountVectorizer
-    vectorizer = CountVectorizer(max_features=max_word_count)
-    with open('../data/intent classification dataset/intent_classification_data.json', 'r') as f:
-        raw_data = json.load(f)
-
-    data = []
-    for i in raw_data.keys():
-        data.extend(raw_data[i])
-    X = np.array([d['value'] for d in data])
-    X = vectorizer.fit_transform(X)
-    class_model = DNN(input_size, hidden_size, output_size)
-    class_model.load_state_dict(torch.load('../models/intent_model_DNN.ckpt'))
-    isFirstReq = True
-    history = []
     fire.Fire(main)
