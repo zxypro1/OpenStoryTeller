@@ -1,3 +1,4 @@
 
 data/STORAL_data/
 *.pyc
+notebooks/wandb
