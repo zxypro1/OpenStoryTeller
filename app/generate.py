@@ -166,8 +166,7 @@ def main(
             history = []
             return
         elif predicted == 3: 
-            yield prompter.get_response("### Response: Do summary")
-            return
+            pass
         elif predicted == 4:
             instruction = instruction + "\n Continue the story. Don't be too long, just about 3 paragraph and less than 128 words."
         else:
