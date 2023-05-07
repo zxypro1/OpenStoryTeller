@@ -2,3 +2,4 @@
 data/STORAL_data/
 *.pyc
 notebooks/wandb
+data/combined_data.json
