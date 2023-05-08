@@ -4,3 +4,4 @@ data/STORAL_data/
 notebooks/wandb
 data/combined_data.json
 notebooks/combined_data.json
+notebooks/combined_data_en.json
